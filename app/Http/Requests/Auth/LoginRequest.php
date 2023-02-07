@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBindingRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class StoreBindingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return !auth()->user();
     }
 
     /**
@@ -24,7 +24,9 @@ class StoreBindingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string'
+            'name' => 'required_without:email|string',
+            'email' => 'required_without:name|email',
+            'password' => 'required|string',
         ];
     }
 }

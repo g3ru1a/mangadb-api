@@ -2,85 +2,79 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BindingResource;
 use App\Models\Binding;
 use App\Http\Requests\StoreBindingRequest;
 use App\Http\Requests\UpdateBindingRequest;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class BindingController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Create controller instance
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
-    public function index()
+    public function __construct()
     {
-        //
+        $this->authorizeResource(Binding::class, 'binding');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return AnonymousResourceCollection
      */
-    public function create()
+    public function index(): AnonymousResourceCollection
     {
-        //
+        return BindingResource::collection(Binding::all());
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreBindingRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreBindingRequest $request
+     * @return BindingResource
      */
-    public function store(StoreBindingRequest $request)
+    public function store(StoreBindingRequest $request): BindingResource
     {
-        //
+        $binding = Binding::create([$request->input('name')]);
+        return BindingResource::make($binding);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Binding  $binding
-     * @return \Illuminate\Http\Response
+     * @param Binding $binding
+     * @return BindingResource
      */
-    public function show(Binding $binding)
+    public function show(Binding $binding): BindingResource
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Binding  $binding
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Binding $binding)
-    {
-        //
+        return BindingResource::make($binding);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateBindingRequest  $request
-     * @param  \App\Models\Binding  $binding
-     * @return \Illuminate\Http\Response
+     * @param UpdateBindingRequest $request
+     * @param Binding $binding
+     * @return BindingResource
      */
-    public function update(UpdateBindingRequest $request, Binding $binding)
+    public function update(UpdateBindingRequest $request, Binding $binding): BindingResource
     {
-        //
+        $binding->update(['name' => $request->input('name')]);
+        return BindingResource::make($binding);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Binding  $binding
-     * @return \Illuminate\Http\Response
+     * @param Binding $binding
+     * @return BindingResource
      */
-    public function destroy(Binding $binding)
+    public function destroy(Binding $binding): BindingResource
     {
-        //
+        $binding->delete();
+        return BindingResource::make($binding);
     }
 }
