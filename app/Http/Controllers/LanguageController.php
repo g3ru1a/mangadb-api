@@ -2,85 +2,92 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\LanguageResource;
 use App\Models\Language;
 use App\Http\Requests\StoreLanguageRequest;
 use App\Http\Requests\UpdateLanguageRequest;
+use App\Models\Review;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class LanguageController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Create controller instance
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
-    public function index()
+    public function __construct()
     {
-        //
+        $this->authorizeResource(Language::class, 'language');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return AnonymousResourceCollection
      */
-    public function create()
+    public function index(): AnonymousResourceCollection
     {
-        //
+        return LanguageResource::collection(Language::approvedOnly());
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreLanguageRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreLanguageRequest $request
+     * @return LanguageResource
      */
-    public function store(StoreLanguageRequest $request)
+    public function store(StoreLanguageRequest $request): LanguageResource
     {
+        $name = htmlspecialchars($request->input('name'));
+        $iso = htmlspecialchars($request->input('iso_639_1'));
         //
+        $language = Language::create(['name' => $name, 'iso_639_1' => $iso]);
+        ReviewController::create(Auth::user(), $language);
+        return LanguageResource::make($language);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Language  $language
-     * @return \Illuminate\Http\Response
+     * @param Language $language
+     * @return LanguageResource
      */
-    public function show(Language $language)
+    public function show(Language $language): LanguageResource
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Language  $language
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Language $language)
-    {
-        //
+        return LanguageResource::make($language);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateLanguageRequest  $request
-     * @param  \App\Models\Language  $language
-     * @return \Illuminate\Http\Response
+     * @param UpdateLanguageRequest $request
+     * @param Language $language
+     * @return LanguageResource
      */
-    public function update(UpdateLanguageRequest $request, Language $language)
+    public function update(UpdateLanguageRequest $request, Language $language): LanguageResource
     {
+        $data = [
+            'name' => $request->input('name') ? htmlspecialchars($request->input('name')) : $language->name,
+            'iso_639_1' => $request->input('iso_639_1') ? htmlspecialchars($request->input('iso_639_1')) : $language->iso_639_1,
+        ];
         //
+        $language_new = Language::create($data);
+        ReviewController::create(Auth::user(), $language_new, $language);
+        return LanguageResource::make($language);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Language  $language
-     * @return \Illuminate\Http\Response
+     * @param Language $language
+     * @return LanguageResource
      */
-    public function destroy(Language $language)
+    public function destroy(Language $language): LanguageResource
     {
-        //
+        $language->delete();
+        return LanguageResource::make($language);
     }
 }

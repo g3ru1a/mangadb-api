@@ -13,7 +13,7 @@ class UpdateLanguageRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class UpdateLanguageRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'string',
+            'iso_639_1' => 'string'
         ];
     }
 }

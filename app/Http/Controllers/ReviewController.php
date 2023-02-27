@@ -9,6 +9,7 @@ use App\Models\ReviewComment;
 use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -20,12 +21,12 @@ class ReviewController extends Controller
     /**
      * Create a new review model for creating items or updating items.
      *
-     * @param User $user The user making the changes
-     * @param $item
-     * @param $replace
+     * @param User $user user
+     * @param mixed $item item
+     * @param mixed|null $item_to_be_replaced item_to_be_replaced
      * @return Review
      */
-    public static function create(User $user, $item, $item_to_be_replaced = null): Review
+    public static function create(User $user, mixed $item, mixed $item_to_be_replaced = null): Review
     {
         $review = new Review();
         $review->submitter()->associate($user);
@@ -33,12 +34,10 @@ class ReviewController extends Controller
         if($item_to_be_replaced != null){
             $review->replace_item()->associate($item_to_be_replaced);
         }
-        if($user->editor){
-            $review->reviewer()->associate($user);
-            $review->status = 'passed';
-        }
-
         $review->save();
+        if($user->editor){
+            ReviewController::approve($review);
+        }
         return $review;
     }
 

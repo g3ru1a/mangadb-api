@@ -15,6 +15,7 @@ class MediaController extends Controller
             $media = MediaController::upload($request->file('image'),
                 'TestImage',
                 'test_images', 1);
+            $media->save();
         }
     }
 
@@ -28,7 +29,6 @@ class MediaController extends Controller
         if ($path) {
             $url = env('IMAGE_CDN_URL') . $path;
             $media = new Media(['url' => $url, 'meta' => $meta]);
-            $media->save();
         }
         return $media ?? false;
     }

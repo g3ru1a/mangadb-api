@@ -40,7 +40,8 @@ class BindingController extends Controller
      */
     public function store(StoreBindingRequest $request): BindingResource
     {
-        $binding = Binding::create(['name' => $request->input('name')]);
+        $name = htmlspecialchars($request->input('name'));
+        $binding = Binding::create(['name' => $name]);
         ReviewController::create(Auth::user(), $binding);
         return BindingResource::make($binding);
     }
@@ -65,15 +66,9 @@ class BindingController extends Controller
      */
     public function update(UpdateBindingRequest $request, Binding $binding): BindingResource
     {
-        $user = Auth::user();
-        if($user->editor){
-            $binding->update(['name' => $request->input('name')]);
-            return BindingResource::make($binding);
-        }else{
-            $binding_new = Binding::create(['name' => $request->input('name')]);
-            ReviewController::create($user, $binding_new, $binding);
-            return BindingResource::make($binding_new);
-        }
+        $binding_new = Binding::create(['name' => $request->input('name')]);
+        ReviewController::create(Auth::user(), $binding_new, $binding);
+        return BindingResource::make($binding_new);
     }
 
     /**

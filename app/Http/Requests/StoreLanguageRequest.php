@@ -13,7 +13,7 @@ class StoreLanguageRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class StoreLanguageRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|string',
+            'iso_639_1' => 'required|string'
         ];
     }
 }
