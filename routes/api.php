@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BindingController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::apiResource('binding', BindingController::class);
 });
 
+Route::post('/media/test', [MediaController::class, 'mediaTest']);
 
 // Review Routes
 Route::prefix('/review')->middleware(['auth:sanctum'])->group(function() {
