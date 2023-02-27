@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BindingController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +21,18 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:sanctum'])->group(function() {
+    Route::apiResource('binding', BindingController::class);
+});
+
+
+// Review Routes
+Route::prefix('/review')->middleware(['auth:sanctum'])->group(function() {
+    Route::get('/comments/{review}', [ReviewController::class, 'comments']);
+    Route::post('/comment/{review}', [ReviewController::class, 'comment']);
+    Route::middleware(['editor'])->group(function () {
+        Route::post('/assign/{review}/{user?}', [ReviewController::class, 'assign']);
+        Route::post('/approve/{review}', [ReviewController::class, 'approve']);
+        Route::post('/reject/{review}', [ReviewController::class, 'reject']);
+    });
 });

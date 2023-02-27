@@ -54,8 +54,7 @@ class BindingPolicy
      */
     public function update(User $user, Binding $binding): Response|bool
     {
-        if($user->editor) return Response::allow();
-        else return Response::deny('Only Editors can alter data.');
+        return Response::allow();
     }
 
     /**

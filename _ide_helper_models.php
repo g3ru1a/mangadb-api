@@ -20,6 +20,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \App\Models\Review|null $review
  * @method static \Illuminate\Database\Eloquent\Builder|Binding newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Binding newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Binding onlyTrashed()
@@ -199,6 +200,77 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Publisher withoutTrashed()
  */
 	class Publisher extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Review
+ *
+ * @property int $id
+ * @property int $submitter_id
+ * @property int|null $reviewer_id
+ * @property int $item_id
+ * @property string $item_type
+ * @property int|null $replace_id
+ * @property string|null $replace_type
+ * @property string $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ReviewComment> $comments
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $item
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $replace_item
+ * @property-read \App\Models\User|null $reviewer
+ * @property-read \App\Models\User|null $submitter
+ * @method static \Illuminate\Database\Eloquent\Builder|Review newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Review newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Review onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Review query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereItemId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereItemType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereReplaceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereReplaceType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereReviewerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereSubmitterId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Review withoutTrashed()
+ */
+	class Review extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\ReviewComment
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property int $review_id
+ * @property string $message
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \App\Models\Review|null $review
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|ReviewComment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ReviewComment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ReviewComment onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ReviewComment query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ReviewComment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReviewComment whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReviewComment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReviewComment whereMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReviewComment whereReviewId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReviewComment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReviewComment whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ReviewComment withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|ReviewComment withoutTrashed()
+ */
+	class ReviewComment extends \Eloquent {}
 }
 
 namespace App\Models{
