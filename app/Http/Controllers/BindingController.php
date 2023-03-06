@@ -66,7 +66,8 @@ class BindingController extends Controller
      */
     public function update(UpdateBindingRequest $request, Binding $binding): BindingResource
     {
-        $binding_new = Binding::create(['name' => $request->input('name')]);
+        $name = htmlspecialchars($request->input('name'));
+        $binding_new = Binding::create(['name' => $name]);
         ReviewController::create(Auth::user(), $binding_new, $binding);
         return BindingResource::make($binding_new);
     }
