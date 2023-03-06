@@ -11,9 +11,9 @@ class UpdateStaffRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,18 @@ class UpdateStaffRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'name' => 'string',
+            'native_name' => 'string',
+            'about' => 'string',
+            'age' => 'numeric',
+            'gender' => 'string',
+            'origin' => 'string',
+            'started_on' => 'string',
+            'stopped_on' => 'string',
+            'picture' => 'image',
         ];
     }
 }

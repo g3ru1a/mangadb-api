@@ -20,7 +20,7 @@ class PublisherResource extends JsonResource
             'name' => $this->name,
             'url' => $this->url,
             'about' => $this->about,
-            'media' => $this->when($this->media != null, MediaResource::make($this->media)),
+            'logo' => $this->when($this->media != null, MediaResource::make($this->media)),
             'review' => $this->when($review_status != null, $review_status),
             'deleted_at' => $this->when($this->deleted_at != null, $this->deleted_at),
         ];

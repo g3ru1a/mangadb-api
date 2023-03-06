@@ -186,6 +186,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \App\Models\Media|null $media
+ * @property-read \App\Models\Review|null $review
  * @method static \Database\Factories\PublisherFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Publisher newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Publisher newQuery()
@@ -411,7 +412,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \App\Models\Media|null $picture
+ * @property-read \App\Models\Media|null $media
+ * @property-read \App\Models\Review|null $review
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SeriesType> $series_types
  * @method static \Database\Factories\StaffFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Staff newModelQuery()
@@ -446,6 +448,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \App\Models\Review|null $review
  * @method static \Illuminate\Database\Eloquent\Builder|Status newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Status newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Status onlyTrashed()
