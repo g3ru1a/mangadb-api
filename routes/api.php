@@ -7,6 +7,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StatusController;
 use Illuminate\Http\Request;
@@ -34,6 +35,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::apiResource('publisher', PublisherController::class);
     Route::apiResource('status', StatusController::class);
     Route::apiResource('staff', StaffController::class);
+    Route::apiResource('series', SeriesController::class);
 });
 
 Route::post('/media/test', [MediaController::class, 'mediaTest']);

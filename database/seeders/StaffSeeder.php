@@ -17,6 +17,6 @@ class StaffSeeder extends Seeder
     public function run()
     {
         Staff::factory()->count(20)
-            ->has(Media::factory(), 'picture')->create();
+            ->has(Media::factory(), 'media')->create();
     }
 }

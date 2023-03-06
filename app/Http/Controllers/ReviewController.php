@@ -83,8 +83,16 @@ class ReviewController extends Controller
 
             //Replace media if available
             if($review->item->media){
-                $review->replace_item->media->delete();
+                if($review->replace_item->media){
+                    $review->replace_item->media->delete();
+                }
                 $review->replace_item->media()->save($review->item->media);
+            }
+            //Replace names if item is a series
+            if($review->item->names){
+                $review->replace_item->names()->delete();
+                $review->replace_item->names()->saveMany($review->item->names);
+                $review->item->names()->delete();
             }
 
             $review->item->delete();

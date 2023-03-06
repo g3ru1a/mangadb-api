@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,9 +13,9 @@ class Series extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['summary'];
+    protected $fillable = ['created_at'];
 
-    public function cover(): MorphOne
+    public function media(): MorphOne
     {
         return $this->morphOne(Media::class, 'item', 'item_type', 'item_id');
     }
@@ -27,5 +28,17 @@ class Series extends Model
     public function types(): HasMany
     {
         return $this->hasMany(SeriesType::class);
+    }
+
+    public function review(): MorphOne
+    {
+        return $this->morphOne(Review::class, 'item', 'item_type', 'item_id');
+    }
+
+    public static function approvedOnly(): Collection|array
+    {
+        return Series::whereHas('review', function($query){
+            $query->where('status', 'approved');
+        })->orWhereDoesntHave('review')->get();
     }
 }

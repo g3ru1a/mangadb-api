@@ -11,9 +11,9 @@ class StoreSeriesRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,14 @@ class StoreSeriesRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'cover' => 'required|image',
+            'names' => 'required|array|min:1',
+            'names.*' => 'required|string',
+            'name_languages' => 'required|array|min:1',
+            'name_languages.*' => 'required|numeric'
         ];
     }
 }

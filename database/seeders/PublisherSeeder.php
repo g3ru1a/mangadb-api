@@ -17,6 +17,6 @@ class PublisherSeeder extends Seeder
     public function run()
     {
         Publisher::factory()->count(10)
-            ->has(Media::factory(), 'logo')->create();
+            ->has(Media::factory(), 'media')->create();
     }
 }

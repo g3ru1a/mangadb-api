@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('series_names', function (Blueprint $table) {
             $table->id();
             $table->mediumText('name');
-            $table->foreignId('language_id');
-            $table->foreignId('series_id');
+            $table->foreignId('language_id')->default(0);
+            $table->foreignId('series_id')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

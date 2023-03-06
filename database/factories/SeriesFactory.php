@@ -18,7 +18,6 @@ class SeriesFactory extends Factory
     public function definition(): array
     {
         return [
-            'summary' => fake()->text(400),
         ];
     }
 }

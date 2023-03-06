@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LanguageResource extends JsonResource
+class SeriesResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +17,8 @@ class LanguageResource extends JsonResource
         $review_status = ($this->review != null) ? $this->review->status : null;
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'iso' => $this->iso_639_1,
+            'cover' => MediaResource::make($this->media),
+            'names' => SeriesNameResource::collection($this->names),
             'review' => $this->when($review_status != null, $review_status),
             'deleted_at' => $this->when($this->deleted_at != null, $this->deleted_at),
         ];
