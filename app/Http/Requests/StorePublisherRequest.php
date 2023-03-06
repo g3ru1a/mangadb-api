@@ -11,9 +11,9 @@ class StorePublisherRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,13 @@ class StorePublisherRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:200',
+            'url' => 'required|string|active_url',
+            'about' => 'required|string',
+            'logo' => 'required|image'
         ];
     }
 }

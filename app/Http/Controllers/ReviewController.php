@@ -80,6 +80,13 @@ class ReviewController extends Controller
         if($review->replace_item){
             $props = \Arr::except($review->item->attributesToArray(), ['id']);
             $review->replace_item->update($props);
+
+            //Replace media if available
+            if($review->item->media){
+                $review->replace_item->media->delete();
+                $review->replace_item->media()->save($review->item->media);
+            }
+
             $review->item->delete();
         }
         $review->save();
@@ -90,6 +97,10 @@ class ReviewController extends Controller
     {
         if($review->reviewer == null){
             $review->reviewer()->associate(Auth::user());
+        }
+        //Remove media if available
+        if($review->item->media){
+            $review->item->media->delete();
         }
         $review->status = 'rejected';
         $review->item->delete();

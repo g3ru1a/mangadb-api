@@ -5,6 +5,7 @@ use App\Http\Controllers\BindingController;
 use App\Http\Controllers\ItemTypeController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::apiResource('binding', BindingController::class);
     Route::apiResource('language', LanguageController::class);
     Route::apiResource('itemtype', ItemTypeController::class);
+    Route::apiResource('publisher', PublisherController::class);
 });
 
 Route::post('/media/test', [MediaController::class, 'mediaTest']);

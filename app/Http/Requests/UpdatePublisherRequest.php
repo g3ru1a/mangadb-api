@@ -11,9 +11,9 @@ class UpdatePublisherRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,13 @@ class UpdatePublisherRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'name' => 'string|max:200',
+            'url' => 'string|active_url',
+            'about' => 'string',
+            'logo' => 'image'
         ];
     }
 }
