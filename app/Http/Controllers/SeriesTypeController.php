@@ -2,85 +2,96 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SeriesTypeResource;
+use App\Models\ItemType;
+use App\Models\Review;
+use App\Models\Series;
 use App\Models\SeriesType;
 use App\Http\Requests\StoreSeriesTypeRequest;
 use App\Http\Requests\UpdateSeriesTypeRequest;
+use App\Models\Status;
+use Auth;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class SeriesTypeController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Create controller instance
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
-    public function index()
+    public function __construct()
     {
-        //
+        $this->authorizeResource(SeriesType::class, 'seriesType');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return AnonymousResourceCollection
      */
-    public function create()
+    public function index(): AnonymousResourceCollection
     {
-        //
+        return SeriesTypeResource::collection(SeriesType::approvedOnly());
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreSeriesTypeRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreSeriesTypeRequest $request
+     * @return SeriesTypeResource
      */
-    public function store(StoreSeriesTypeRequest $request)
+    public function store(StoreSeriesTypeRequest $request): SeriesTypeResource
     {
-        //
+        $data = [
+            'series_id' => $request->input('series_id'),
+            'item_type_id' => $request->input('item_type_id'),
+            'status_id' => $request->input('status_id'),
+        ];
+        $seriesType = SeriesType::create($data);
+        ReviewController::create(Auth::user(), $seriesType);
+        return SeriesTypeResource::make($seriesType);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\SeriesType  $seriesType
-     * @return \Illuminate\Http\Response
+     * @param SeriesType $seriesType
+     * @return SeriesTypeResource
      */
-    public function show(SeriesType $seriesType)
+    public function show(SeriesType $seriesType): SeriesTypeResource
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\SeriesType  $seriesType
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(SeriesType $seriesType)
-    {
-        //
+        return SeriesTypeResource::make($seriesType);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateSeriesTypeRequest  $request
-     * @param  \App\Models\SeriesType  $seriesType
-     * @return \Illuminate\Http\Response
+     * @param UpdateSeriesTypeRequest $request
+     * @param SeriesType $seriesType
+     * @return SeriesTypeResource
      */
-    public function update(UpdateSeriesTypeRequest $request, SeriesType $seriesType)
+    public function update(UpdateSeriesTypeRequest $request, SeriesType $seriesType): SeriesTypeResource
     {
-        //
+        $data = [
+            'series_id' => $request->input('series_id'),
+            'item_type_id' => $request->input('item_type_id'),
+            'status_id' => $request->input('status_id'),
+        ];
+        $seriesType_new = SeriesType::create($data);
+        ReviewController::create(Auth::user(), $seriesType_new, $seriesType);
+        return SeriesTypeResource::make($seriesType_new);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\SeriesType  $seriesType
-     * @return \Illuminate\Http\Response
+     * @param SeriesType $seriesType
+     * @return SeriesTypeResource
      */
-    public function destroy(SeriesType $seriesType)
+    public function destroy(SeriesType $seriesType): SeriesTypeResource
     {
-        //
+        $seriesType->delete();
+        return SeriesTypeResource::make($seriesType);
     }
 }

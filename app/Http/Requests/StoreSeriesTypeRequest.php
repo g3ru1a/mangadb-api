@@ -11,9 +11,9 @@ class StoreSeriesTypeRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,12 @@ class StoreSeriesTypeRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'series_id' => 'required|numeric|exists:series,id',
+            'item_type_id' => 'required|numeric|exists:item_types,id',
+            'status_id' => 'required|numeric|exists:statuses,id'
         ];
     }
 }
