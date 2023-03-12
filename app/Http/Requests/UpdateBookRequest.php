@@ -11,9 +11,9 @@ class UpdateBookRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,20 @@ class UpdateBookRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'name' => 'string',
+            'summary' => 'string',
+            'isbn_10' => 'string|min:10|max:10',
+            'isbn_13' => 'string|min:13|max:13',
+            'page_count' => 'numeric',
+            'release_date' => 'string',
+            'series_type_id' => 'numeric|exists:series_types,id',
+            'publisher_id' => 'numeric|exists:publishers,id',
+            'language_id' => 'numeric|exists:languages,id',
+            'binding_id' => 'numeric|exists:bindings,id',
+            'cover' => 'image',
         ];
     }
 }

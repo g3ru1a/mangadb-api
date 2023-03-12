@@ -17,9 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('series_type_id');
             $table->foreignId('staff_id');
-            $table->string('role');
+            $table->string('role')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

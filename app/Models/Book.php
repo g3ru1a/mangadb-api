@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -37,8 +38,20 @@ class Book extends Model
         return $this->belongsTo(Binding::class);
     }
 
-    public function cover(): MorphOne
+    public function media(): MorphOne
     {
         return $this->morphOne(Media::class, 'item', 'item_type', 'item_id');
+    }
+
+    public function review(): MorphOne
+    {
+        return $this->morphOne(Review::class, 'item', 'item_type', 'item_id');
+    }
+
+    public static function approvedOnly(): Collection|array
+    {
+        return Book::whereHas('review', function($query){
+            $query->where('status', 'approved');
+        })->orWhereDoesntHave('review')->get();
     }
 }

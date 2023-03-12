@@ -29,7 +29,9 @@ class SeriesType extends Model
 
     public function staff(): BelongsToMany
     {
-        return $this->belongsToMany(Staff::class);
+        return $this->belongsToMany(Staff::class)
+            ->withPivot(['role'])
+            ->withTimestamps();
     }
 
     public function status(): BelongsTo

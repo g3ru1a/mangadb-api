@@ -56,9 +56,10 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \App\Models\Binding|null $binding
- * @property-read \App\Models\Media|null $cover
  * @property-read \App\Models\Language|null $language
+ * @property-read \App\Models\Media|null $media
  * @property-read \App\Models\Publisher|null $publisher
+ * @property-read \App\Models\Review|null $review
  * @property-read \App\Models\SeriesType|null $series_type
  * @method static \Database\Factories\BookFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Book newModelQuery()
@@ -281,12 +282,12 @@ namespace App\Models{
  * App\Models\Series
  *
  * @property int $id
- * @property string $summary
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \App\Models\Media|null $cover
+ * @property-read \App\Models\Media|null $media
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SeriesName> $names
+ * @property-read \App\Models\Review|null $review
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SeriesType> $types
  * @method static \Database\Factories\SeriesFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Series newModelQuery()
@@ -296,7 +297,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Series whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Series whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Series whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Series whereSummary($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Series whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Series withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Series withoutTrashed()
@@ -346,6 +346,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \App\Models\Review|null $review
  * @property-read \App\Models\Series|null $series
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Staff> $staff
  * @property-read \App\Models\Status|null $status
@@ -366,34 +367,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|SeriesType withoutTrashed()
  */
 	class SeriesType extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\SeriesTypeStaff
- *
- * @property int $id
- * @property int $series_type_id
- * @property int $staff_id
- * @property string $role
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|SeriesTypeStaff newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SeriesTypeStaff newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SeriesTypeStaff onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|SeriesTypeStaff query()
- * @method static \Illuminate\Database\Eloquent\Builder|SeriesTypeStaff whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SeriesTypeStaff whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SeriesTypeStaff whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SeriesTypeStaff whereRole($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SeriesTypeStaff whereSeriesTypeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SeriesTypeStaff whereStaffId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SeriesTypeStaff whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SeriesTypeStaff withTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|SeriesTypeStaff withoutTrashed()
- */
-	class SeriesTypeStaff extends \Eloquent {}
 }
 
 namespace App\Models{

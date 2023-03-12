@@ -23,7 +23,9 @@ class Staff extends Model
 
     public function series_types(): BelongsToMany
     {
-        return $this->belongsToMany(SeriesType::class);
+        return $this->belongsToMany(SeriesType::class)
+            ->withPivot(['role'])
+            ->withTimestamps();
     }
 
     public function review(): MorphOne
