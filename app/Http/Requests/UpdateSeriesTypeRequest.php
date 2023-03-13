@@ -24,9 +24,13 @@ class UpdateSeriesTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'series_id' => 'required|numeric|exists:series,id',
-            'item_type_id' => 'required|numeric|exists:item_types,id',
-            'status_id' => 'required|numeric|exists:statuses,id'
+            'series_id' => 'numeric|exists:series,id',
+            'item_type_id' => 'numeric|exists:item_types,id',
+            'status_id' => 'numeric|exists:statuses,id',
+            'staff' => 'array|min:1',
+            'staff.*' => 'numeric|exists:staff,id',
+            'roles' => 'required_with:staff|array|min:1',
+            'roles.*' => 'string',
         ];
     }
 }

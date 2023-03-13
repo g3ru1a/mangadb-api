@@ -26,7 +26,11 @@ class StoreSeriesTypeRequest extends FormRequest
         return [
             'series_id' => 'required|numeric|exists:series,id',
             'item_type_id' => 'required|numeric|exists:item_types,id',
-            'status_id' => 'required|numeric|exists:statuses,id'
+            'status_id' => 'required|numeric|exists:statuses,id',
+            'staff' => 'required|array|min:1',
+            'staff.*' => 'required|numeric|exists:staff,id',
+            'roles' => 'required|array|min:1',
+            'roles.*' => 'required|string',
         ];
     }
 }

@@ -9,6 +9,7 @@ use App\Models\Series;
 use App\Models\SeriesType;
 use App\Http\Requests\StoreSeriesTypeRequest;
 use App\Http\Requests\UpdateSeriesTypeRequest;
+use App\Models\Staff;
 use App\Models\Status;
 use Auth;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -49,6 +50,16 @@ class SeriesTypeController extends Controller
             'status_id' => $request->input('status_id'),
         ];
         $seriesType = SeriesType::create($data);
+        // Staff
+        $staff = $request->input('staff');
+        $roles = $request->input('roles');
+        foreach ($staff as $key => $value){
+            $_staff = Staff::find($value);
+            $_role = htmlspecialchars($roles[$key]);
+            $seriesType->staff()->attach($_staff, ['role' => $_role]);
+        }
+        $seriesType->save();
+        // .\Staff
         ReviewController::create(Auth::user(), $seriesType);
         return SeriesTypeResource::make($seriesType);
     }
@@ -74,11 +85,27 @@ class SeriesTypeController extends Controller
     public function update(UpdateSeriesTypeRequest $request, SeriesType $seriesType): SeriesTypeResource
     {
         $data = [
-            'series_id' => $request->input('series_id'),
-            'item_type_id' => $request->input('item_type_id'),
-            'status_id' => $request->input('status_id'),
+            'series_id' => $request->input('series_id') ?? $seriesType->series_id,
+            'item_type_id' => $request->input('item_type_id') ?? $seriesType->item_type_id,
+            'status_id' => $request->input('status_id') ?? $seriesType->status_id,
         ];
         $seriesType_new = SeriesType::create($data);
+        // Staff
+        $staff = $request->input('staff');
+        if ($staff){
+            $roles = $request->input('roles');
+            foreach ($staff as $key => $value){
+                $_staff = Staff::find($value);
+                $_role = htmlspecialchars($roles[$key]);
+                $seriesType_new->staff()->attach($_staff, ['role' => $_role]);
+            }
+        }else{
+            foreach ($seriesType->staff as $_staff){
+                $seriesType_new->staff()->attach($_staff, ['role' => $_staff->pivot->role]);
+            }
+        }
+        $seriesType_new->save();
+        // .\Staff
         ReviewController::create(Auth::user(), $seriesType_new, $seriesType);
         return SeriesTypeResource::make($seriesType_new);
     }
@@ -91,6 +118,7 @@ class SeriesTypeController extends Controller
      */
     public function destroy(SeriesType $seriesType): SeriesTypeResource
     {
+        $seriesType->staff()->detach();
         $seriesType->delete();
         return SeriesTypeResource::make($seriesType);
     }

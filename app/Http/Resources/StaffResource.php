@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\MissingValue;
 
 class StaffResource extends JsonResource
 {
@@ -17,10 +18,12 @@ class StaffResource extends JsonResource
     public function toArray($request): array
     {
         $review_status = ($this->review != null) ? $this->review->status : null;
+        $role = $this->whenPivotLoaded('series_type_staff', function() {return $this->pivot->role;});
         return [
             'id' => $this->id,
             'name' => $this->name,
             'native_name' => $this->when($this->native_name != null, $this->native_name),
+            'role' => $this->when($role, $role),
             'about' => $this->when($this->about != null, $this->about),
             'age' => $this->when($this->age != null, $this->age),
             'gender' => $this->when($this->gender != null, $this->gender),

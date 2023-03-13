@@ -38,6 +38,8 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::apiResource('status', StatusController::class);
     Route::apiResource('staff', StaffController::class);
     Route::apiResource('series', SeriesController::class);
+    Route::apiResource('series-type', SeriesTypeController::class)
+        ->parameters(['series-type' => 'seriesType']);
     Route::apiResource('book', BookController::class);
 });
 

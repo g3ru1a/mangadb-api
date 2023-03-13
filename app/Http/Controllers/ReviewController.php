@@ -94,6 +94,14 @@ class ReviewController extends Controller
                 $review->replace_item->names()->saveMany($review->item->names);
                 $review->item->names()->delete();
             }
+            //Replace staff if item is a series type
+            if($review->item->staff){
+                $review->replace_item->staff()->detach();
+                foreach ($review->item->staff as $_staff){
+                    $review->replace_item->staff()->attach($_staff, ['role' => $_staff->pivot->role]);
+                }
+                $review->item->staff()->detach();
+            }
 
             $review->item->delete();
         }
