@@ -22,12 +22,8 @@ use Nette\Utils\Json;
 class AuthController extends Controller
 {
 
-    public function register(Request $request): array
+    public function register(RegisterRequest $request): array
     {
-        if (User::where('email', $request->input('email'))->exists()) {
-            return ['message' => 'user_exists'];
-        }
-
         $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
