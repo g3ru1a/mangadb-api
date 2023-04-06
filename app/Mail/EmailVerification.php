@@ -16,8 +16,6 @@ class EmailVerification extends Mailable
 
     public $email;
 
-    public $code;
-
     public $payload;
 
     /**
