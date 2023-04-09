@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verify', [AuthController::class, 'verify']);
+Route::post('/password/reset', [AuthController::class, 'passwordReset']);
+Route::post('/password/verify', [AuthController::class, 'passwordVerify']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 

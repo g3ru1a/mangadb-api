@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\PasswordResetRequest;
+use App\Http\Requests\Auth\PasswordVerifyRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Mail\EmailVerification;
+use App\Mail\PasswordResetMail;
+use App\Models\PasswordReset;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -61,6 +65,46 @@ class AuthController extends Controller
             'user' => $payload['user'],
             'token' => $payload['token'],
         ];
+    }
+
+    public function passwordReset(PasswordResetRequest $request): array
+    {
+        $email = $request->input('email');
+        $user = User::where('email', $email)->first();
+        $token = $user->createToken($request->userAgent())->plainTextToken;
+
+        $passwordReset = new PasswordReset();
+        $passwordReset->email = $email;
+        $passwordReset->token = $token;
+        $passwordReset->created_at = new \DateTime('now');
+        $passwordReset->save();
+
+        $payload = Crypt::encrypt([
+            'token' => $token,
+        ]);
+
+        $message = (new PasswordResetMail($email, $payload));
+
+        Mail::queue($message);
+
+        return ['message' => 'email_sent'];
+    }
+
+    public function passwordVerify(PasswordVerifyRequest $request): array
+    {
+        $payload = Crypt::decrypt($request->input('payload'));
+        $password = $request->input('password');
+        $passwordReset = PasswordReset::where('token', $payload['token'])->first();
+
+        if (!$passwordReset) {
+            return ['message' => 'invalid_token'];
+        }
+
+        $user = User::where('email', $passwordReset->email)->first();
+        $user->password = bcrypt($password);
+        $user->save();
+
+        return ['message' => 'password_reset'];
     }
 
     public function login(LoginRequest $request): JsonResponse|array
