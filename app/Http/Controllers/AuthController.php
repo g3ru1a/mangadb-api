@@ -104,6 +104,8 @@ class AuthController extends Controller
         $user->password = bcrypt($password);
         $user->save();
 
+        $passwordReset->delete();
+
         return ['message' => 'password_reset'];
     }
 
