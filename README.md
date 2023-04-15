@@ -44,6 +44,15 @@ composer install --ignore-platform-reqs
 ```bash
 $ cp .env.example .env
 ```
+- Generate the app key:
+```bash
+$ php artisan key:generate
+```
+- Or within docker:
+
+```bash
+$ docker exec -d <container_name> php artisan key:generate
+```
 
 4. Set the `WWWGROUP` and `WWWUSER` to your user ID, if it's not `1000`, in the `.env` file.
 
@@ -69,13 +78,25 @@ AWS_DEFAULT_REGION=<your-region>
 AWS_BUCKET=<your-bucket>
 ```
 
-7. Set your image_cdn URL in the `.env` file.
+7. Add your Mailer information in the `.env` file.
+
+```text
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=<username>
+MAIL_PASSWORD=<password>
+MAIL_ENCRYPTION=tls
+```
+
+
+8. Set your image_cdn URL in the `.env` file.
 
 ```text
 IMAGE_CDN_URL="https://cdn.yourwebsite.com/"
 ```
 
-8. Run Sail using the following command:
+9. Run Sail using the following command:
 
 ```bash
 $ ./vendor/bin/sail up
