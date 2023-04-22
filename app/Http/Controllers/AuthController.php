@@ -40,7 +40,7 @@ class AuthController extends Controller
             'verified' => true,
         ]);
 
-        $message = (new EmailVerification($user->email, $payload));
+        $message = (new EmailVerification($user->email, $user->name, $payload));
 
         Mail::queue($message);
 

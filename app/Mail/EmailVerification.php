@@ -15,7 +15,7 @@ class EmailVerification extends Mailable
     use Queueable, SerializesModels;
 
     public $email;
-
+    public $name;
     public $payload;
 
     /**
@@ -23,9 +23,10 @@ class EmailVerification extends Mailable
      *
      * @return void
      */
-    public function __construct(string $email, string $payload)
+    public function __construct(string $email, string $name, string $payload)
     {
         $this->email = $email;
+        $this->name = $name;
         $this->payload = $payload;
     }
 
@@ -52,8 +53,8 @@ class EmailVerification extends Mailable
         return new Content(
             markdown: 'mail.emailVerification',
             with: [
-                'payload' => $this->payload,
-                'url' => env('FRONTEND_URL'),
+                'name' => $this->name,
+                'link' => env('FRONTEND_URL') . '/verify?payload='. $this->payload,
             ]
         );
     }
