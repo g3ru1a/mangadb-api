@@ -54,7 +54,7 @@ class EmailVerification extends Mailable
             markdown: 'mail.emailVerification',
             with: [
                 'name' => $this->name,
-                'link' => env('FRONTEND_URL') . '/verify?payload='. $this->payload,
+                'link' => env('FRONTEND_URL') . '/auth/verify?payload='. $this->payload,
             ]
         );
     }

@@ -5,6 +5,6 @@
 
     @include('mail.components.button', [
         'slot' => 'Reset Password',
-        'url' => $url . '/password-verify?payload=' . $payload,
+        'url' => $url . '/auth/password-verify?payload=' . $payload,
     ]);
 </x-mail::message>
