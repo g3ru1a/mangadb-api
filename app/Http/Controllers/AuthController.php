@@ -22,11 +22,12 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 class AuthController extends Controller
 {
 
-    public function register(RegisterRequest $request): array
+    public function register(RegisterRequest $request): JsonResponse
     {
         $user = User::create([
             'name' => $request->input('name'),
@@ -44,30 +45,32 @@ class AuthController extends Controller
 
         Mail::queue($message);
 
-        return ["message" => "registered"];
+        return response()->json(["message" => "registered"], 200);
     }
 
-    public function verify(Request $request) {
-        $payload = Json::decode($request->getContent());
-        $payload = Crypt::decrypt($payload->payload);
+    public function verify(Request $request): JsonResponse {
+        try {
+            $payload = Json::decode($request->getContent());
+            $payload = Crypt::decrypt($payload->payload);
 
-        if (!$payload['verified']) {
-            return [
-                'message' => 'error'
-            ];
+            if (!$payload['verified']) {
+                return response()->json(['message' => 'unexpected error'], 400);
+            }
+
+            $user = User::where('email', $payload['user']['email'])->first();
+            $user->email_verified_at = Carbon::now()->format('Y-m-d H:i:s');
+            $user->save();
+
+            return response()->json([
+                'user' => $payload['user'],
+                'token' => $payload['token'],
+            ], 200);
+        }catch (JsonException $jsonException){
+            return response()->json(['message' => 'something went wrong'], 400);
         }
-
-        $user = User::where('email', $payload['user']['email'])->first();
-        $user->email_verified_at = Carbon::now()->format('Y-m-d H:i:s');
-        $user->save();
-
-        return [
-            'user' => $payload['user'],
-            'token' => $payload['token'],
-        ];
     }
 
-    public function passwordReset(PasswordResetRequest $request): array
+    public function passwordReset(PasswordResetRequest $request): JsonResponse
     {
         $email = $request->input('email');
         $user = User::where('email', $email)->first();
@@ -87,7 +90,7 @@ class AuthController extends Controller
 
         Mail::queue($message);
 
-        return ['message' => 'email_sent'];
+        return response()->json(['message' => 'email_sent'], 200);
     }
 
     public function passwordVerify(PasswordVerifyRequest $request): array
@@ -127,7 +130,8 @@ class AuthController extends Controller
         }else return Response::json(["message" => "Wrong User or Password."],422);
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request): void
+    {
         $request->user()->tokens()->delete();
     }
 

@@ -177,6 +177,25 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\PasswordReset
+ *
+ * @property int $id
+ * @property string $email
+ * @property string $token
+ * @property string|null $created_at
+ * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset query()
+ * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset whereToken($value)
+ */
+	class PasswordReset extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Publisher
  *
  * @property int $id
