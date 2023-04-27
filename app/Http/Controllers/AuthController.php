@@ -11,6 +11,7 @@ use App\Mail\EmailVerification;
 use App\Mail\PasswordResetMail;
 use App\Models\PasswordReset;
 use App\Models\User;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -45,7 +46,7 @@ class AuthController extends Controller
 
         Mail::queue($message);
 
-        return response()->json(["message" => "registered"], 200);
+        return Response::json(["message" => "registered"], 200);
     }
 
     public function verify(Request $request): JsonResponse {
@@ -54,19 +55,19 @@ class AuthController extends Controller
             $payload = Crypt::decrypt($payload->payload);
 
             if (!$payload['verified']) {
-                return response()->json(['message' => 'unexpected error'], 400);
+                return Response::json(['message' => 'Bad Payload'], 400);
             }
 
             $user = User::where('email', $payload['user']['email'])->first();
             $user->email_verified_at = Carbon::now()->format('Y-m-d H:i:s');
             $user->save();
 
-            return response()->json([
+            return Response::json([
                 'user' => $payload['user'],
                 'token' => $payload['token'],
             ], 200);
         }catch (JsonException $jsonException){
-            return response()->json(['message' => 'something went wrong'], 400);
+            return Response::json(['message' => 'Bad Payload'], 400);
         }
     }
 
@@ -90,29 +91,33 @@ class AuthController extends Controller
 
         Mail::queue($message);
 
-        return response()->json(['message' => 'email_sent'], 200);
+        return Response::json(['message' => 'email_sent'], 200);
     }
 
-    public function passwordVerify(PasswordVerifyRequest $request): array
+    public function passwordVerify(PasswordVerifyRequest $request): JsonResponse
     {
-        $payload = Crypt::decrypt($request->input('payload'));
-        $password = $request->input('password');
-        $passwordReset = PasswordReset::where('token', $payload['token'])->first();
+        try {
+            $payload = Crypt::decrypt($request->input('payload'));
+            $password = $request->input('password');
+            $passwordReset = PasswordReset::where('token', $payload['token'])->first();
 
-        if (!$passwordReset) {
-            return ['message' => 'invalid_token'];
+            if (!$passwordReset) {
+                return Response::json(['message' => 'bad_payload'], 400);
+            }
+
+            $user = User::where('email', $passwordReset->email)->first();
+            $user->password = bcrypt($password);
+            $user->save();
+
+            $passwordReset->delete();
+
+            return Response::json(['message' => 'password_reset'], 200);
+        }catch (DecryptException $e){
+            return Response::json(['message' => 'bad_payload'], 400);
         }
-
-        $user = User::where('email', $passwordReset->email)->first();
-        $user->password = bcrypt($password);
-        $user->save();
-
-        $passwordReset->delete();
-
-        return ['message' => 'password_reset'];
     }
 
-    public function login(LoginRequest $request): JsonResponse|array
+    public function login(LoginRequest $request): JsonResponse
     {
         if($request->input('email')){
             $user = User::whereEmail($request->input('email'))->first();
@@ -123,10 +128,10 @@ class AuthController extends Controller
         if(!$user) return Response::json(["message" => "Could not find User."], 404);
 
         if(Hash::check($request->input('password'), $user->password)){
-            return [
+            return Response::json([
                 'user' => UserResource::make($user),
                 'token' => $user->createToken($request->userAgent())->plainTextToken,
-            ];
+            ], 200);
         }else return Response::json(["message" => "Wrong User or Password."],422);
     }
 
